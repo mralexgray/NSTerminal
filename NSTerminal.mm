@@ -8,60 +8,41 @@
 #import "NSTerminal.h"
 
 
-#include <iostream>
-#include <string>
+#include <iostream.h>
+#include <string.h>
 #include <stdio.h>
 using namespace std;
 
-@implementation NSTerminal
-//----Output
-+(void)printString:(NSString *)str
-{
-    cout<<[str UTF8String]<<endl;
+@implementation NSTerminal																			//----Output
+
++   (void) printString:									(NSString*)str				{ cout<<[str UTF8String]<<endl;	}	
++   (void) printStringWithoutNewline:				(NSString*)str				{ cout<<[str UTF8String];
 }
-+(void)printStringWithoutNewline:(NSString *)str
-{
-    cout<<[str UTF8String];
-}
-+(void)printStringWithFormat:(NSString *)format, ...
-{
++   (void) printStringWithFormat:					(NSString*)format, ...	{
     va_list args;
     va_start(args, format);
     cout << [[[NSString alloc] initWithFormat:format arguments:args] UTF8String] << endl;
     va_end(args);
 }
-+(void)printStringWithoutNewlineWithFormat:(NSString *)format, ...
-{
++   (void) printStringWithoutNewlineWithFormat: (NSString*)format, ...	{
     va_list args;
     va_start(args, format);
     cout << [[[NSString alloc] initWithFormat:format arguments:args] UTF8String] << endl;
     va_end(args);
 }
-//----Input
-+(int)readInt
-{
-    int res;
-    cin>>res;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return res;
-}
-+(float)readFloat
-{
-    float res;
-    cin>>res;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return res;
-}
-+(NSString *)readString
-{
-    string res;
-    std::getline(std::cin, res);
-    return [NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding];
-}
-+(NSURL*)readURL
-{
-    string res;
-    cin>>res;
-    return [NSURL URLWithString:[NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding]];
-}
+
++    (int) readInt		{ 
+
+	int   res = 0;
+	while(!(cin >> res)){
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Invalid input.  Try again: ";
+	}
+	return   (int)res; //	cin>>res; 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}																		//----Input
++  (float) readFloat 	{ float res; cin>>res; cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); return (float)res; }
+
++   (NSS*) readString	{ string res; std::getline(std::cin, res); return [NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding];	}
++ (NSURL*) readURL		{ string res; cin>>res; return [NSURL URLWithString:[NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding]];	}
 @end
