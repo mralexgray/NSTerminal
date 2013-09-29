@@ -5,14 +5,22 @@
 #include <string.h>
 #include  <stdio.h>
 using namespace std;
+
 static NSMA *blocks = nil; NSMS* buffer = nil; static BOOL inBlockCallback = NO;
 #define BUFFER(x) buffer = buffer ?: [NSMS new], [buffer appendString:([buffer isEqualToString:x]) ? @"" : x], x
 
 @implementation NSTerminal
 
-+   (void) printString:									(NSS*)str			{ cout<<[BUFFER(str) UTF8String]<<endl;	}		//----Output
-+   (void) printStringWithoutNewline:				(NSS*)str			{ cout<<[BUFFER(str) UTF8String];			}
++   (void) printString:									(NSS*)str			{
+
+	cout<<[BUFFER(str) UTF8String]<<endl;
+}		//----Output
++   (void) printStringWithoutNewline:				(NSS*)str			{
+
+	cout<<[BUFFER(str) UTF8String];
+}
 +   (void) printStringWithFormat:					(NSS*)format, ...	{
+
     va_list args;
     va_start(args, format);
     cout << [BUFFER([NSString.alloc initWithFormat:format arguments:args]) UTF8String] << endl;
@@ -51,9 +59,21 @@ static NSMA *blocks = nil; NSMS* buffer = nil; static BOOL inBlockCallback = NO;
 }
 +   (NSS*) readString	{
 
-	string res; 		//fprintf(stderr, "readingstdin!");
-	std::getline(std::cin, res); 
-	NSString * nsstring = [NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding];
+
+//	char *line = NULL;
+//	size_t linecap = 0;
+//	ssize_t linelen;
+//	while ((linelen = getline(&line, &linecap, fp)) > 0)
+//			 fwrite(line, linelen, 1, stdout);
+//	const char* res;
+	//	string res; 		//fprintf(stderr, "readingstdin!");
+
+//	getline(stdin, res);
+//	std::getline(std::cin, res);
+
+	NSString *nsstring = [NSString.alloc initWithData:[NSData dataWithData:[NSFileHandle.fileHandleWithStandardInput readDataToEndOfFile]] encoding:NSUTF8StringEncoding];
+
+//	NSString * nsstring = [NSString stringWithCString:res.c_str() encoding:NSASCIIStringEncoding];
 	if  (blocks.count) {
 		for( VoidBlock(^_readBlock)(NSS* userInput, const char* raw) in blocks) {
 	 	 VoidBlock j = _readBlock(nsstring, @encode(typeof(string)));

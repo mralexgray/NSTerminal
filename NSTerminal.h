@@ -34,12 +34,4 @@
 
 
 
-
-
-
-
-
-
-
-
 //		#import "NSInteger.h"	#include <stdint.h>
